@@ -1,13 +1,30 @@
 package org.example.model;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@RequiredArgsConstructor
+@Entity
+@Table(name = "links", indexes = @Index(name = "idx_short_url", columnList = "short_url"))
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Link {
-    private final String shortURL;
-    private final String longURL;
-    private final LocalDateTime localDateTime;
-    private final Integer userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "short_url", unique = true, nullable = false)
+    private String shortURL;
+
+    @Column(name = "long_url", nullable = false)
+    private String longURL;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime localDateTime;
+
+    @Column(name = "user_id", nullable = true)
+    private Integer userId;
 }
