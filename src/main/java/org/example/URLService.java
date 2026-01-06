@@ -1,5 +1,6 @@
 package org.example;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.Exception.URLNotFound;
@@ -14,37 +15,34 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class URLService {
     private final IURLRepository urlRepository;
-    private static int counter = 100000000;
-    private static final String elements = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    //private static int counter = 100000000;
+    private static final String ELEMENTS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    private static String base62(String longUrl){
-        int n = counter++;
+    private static String base62(long n){
         StringBuilder sb = new StringBuilder();
         while(n > 0){
-            sb.append(elements.charAt(n%62));
+            sb.append(ELEMENTS.charAt((int)(n%62)));
             n /= 62;
         }
         return sb.reverse().toString();
     }
 
-    public String shortURL(ShortenURLDTO shortenURLDTO){
-        log.debug("Received request: longUrl={}, userId={}", shortenURLDTO.getLongUrl(), shortenURLDTO.getUserId());
+    @Transactional
+    public String shortURL(ShortenURLDTO dto){
+        log.debug("Received request: longUrl={}, userId={}", dto.getLongUrl(), dto.getUserId());
 
-        final String longURL = shortenURLDTO.getLongUrl();
-        final Integer userId = shortenURLDTO.getUserId();
-        final String shortUrl = base62(longURL);
+        final String longURL = dto.getLongUrl();
+        final Integer userId = dto.getUserId();
+        //final String shortUrl = base62(longURL);
 
-        log.debug("Generated short URL: {}", shortUrl);
+        Link link = Link.builder().longURL(longURL).localDateTime(LocalDateTime.now()).userId(userId).build();
+        link = urlRepository.save(link);
 
-        Link link = Link.builder()
-                .shortURL(shortUrl)
-                .longURL(longURL)
-                .localDateTime(LocalDateTime.now())
-                .userId(userId)
-                .build();
+        log.debug("Generated link but not shortURL yet");
+        String shortUrl = String.format("%5s", base62( link.getId())).replace(' ', '0');
 
-        log.debug("Saving link to DB: shortURL={}, longURL={}, userId={}",
-                link.getShortURL(), link.getLongURL(), link.getUserId());
+        log.debug("Generated link with shortURL={}, saving to db", shortUrl);
+        link.setShortURL(shortUrl);
 
         Link saved = urlRepository.save(link);
         log.info("Successfully saved link with ID: {}", saved.getId());
