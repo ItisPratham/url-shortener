@@ -2,6 +2,7 @@ package org.example;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.Exception.URLNotFound;
 import org.example.dto.ShortenURLDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,17 +12,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class Controller {
     private final URLService URLService;
-    private final String baseURL= "www.myURL.com/";
+    private final String baseURL= "www.myURL.com/"; // for demo
 
     @PostMapping("/")
     public ResponseEntity<String> createShortURL(@RequestBody ShortenURLDTO shortenURLDTO){
         log.info("Request for creating short url");
+        log.debug("Request body: {}", shortenURLDTO);
         try {
             final String shortURL = URLService.shortURL(shortenURLDTO);
-            return ResponseEntity.ok(shortURL);
+            log.info("Short URL created: {}", shortURL);
+            return ResponseEntity.ok(baseURL + shortURL);
         }
         catch (Exception e){
-            return ResponseEntity.status(500).body("Internal Server Error");
+            log.error("Error creating short URL", e);
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
     }
 
@@ -33,6 +37,9 @@ public class Controller {
             log.info(longURL);
             return ResponseEntity.status(302).body(longURL);
         }
+        catch (URLNotFound e){
+            return ResponseEntity.status(404).body("URL not found");
+        }
         catch (Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
         }
@@ -42,7 +49,7 @@ public class Controller {
     public ResponseEntity<String> getAnalytics(){
         log.info("Request for fetching the analytics for admin");
         try {
-            return ResponseEntity.ok("Demo link");
+            return ResponseEntity.ok("Non functional yet.");
         }
         catch (Exception e){
             return ResponseEntity.status(500).body("Internal Server Error");
