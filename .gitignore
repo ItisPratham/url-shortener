@@ -1,0 +1,50 @@
+### ===== Maven =====
+target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+
+### ===== Java =====
+*.class
+*.log
+hs_err_pid*
+
+### ===== IDEs =====
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VS Code
+.vscode/
+
+### ===== OS =====
+.DS_Store
+Thumbs.db
+
+### ===== Spring Boot =====
+logs/
+*.pid
+
+### ===== Environment / Secrets =====
+.env
+application-local.yml
+application-local.properties
+application-dev.yml
+application-dev.properties
+application-prod.yml
+application-prod.properties
+
+### ===== Test reports =====
+surefire-reports/
+failsafe-reports/
+
+### ===== Misc =====
+*.swp
+*~
