@@ -89,3 +89,5 @@ build/
 ### Mac OS ###
 .DS_Store
 >>>>>>> origin/main
+
+/src/main/resources/application-production.yml
