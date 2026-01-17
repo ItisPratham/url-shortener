@@ -20,7 +20,7 @@ public class Link {
     @Column(name = "short_url", unique = true)
     private String shortURL;
 
-    @Column(name = "long_url", nullable = false)
+    @Column(name = "long_url", nullable = true)
     private String longURL;
 
     @Column(name = "created_at", nullable = false)

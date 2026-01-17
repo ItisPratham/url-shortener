@@ -44,6 +44,7 @@ mvn spring-boot:run
 
 * Short URLs are generated using Base62
 * `short_url` is nullable during creation and updated after ID generation
+* Don't forget to add application-production.yaml if running on cloud.
 
 ## Future Enhancements
 
