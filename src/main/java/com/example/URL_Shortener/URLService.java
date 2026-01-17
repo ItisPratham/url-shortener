@@ -29,9 +29,9 @@ public class URLService {
 
     @Transactional
     public String shortURL(ShortenURL dto){
-        log.debug("Received request: longUrl={}, userId={}", dto.getLongURL(), dto.getUserId());
+        log.debug("Received request: longUrl={}, userId={}", dto.getLongUrl(), dto.getUserId());
 
-        final String longURL = dto.getLongURL();
+        final String longURL = dto.getLongUrl();
         final Integer userId = dto.getUserId();
 
         Link link = Link.builder().longURL(longURL).localDateTime(LocalDateTime.now()).userId(userId).build();
