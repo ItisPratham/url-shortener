@@ -14,7 +14,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Link {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "short_url_seq_generator")
+    @SequenceGenerator(
+            name = "short_url_seq_generator",
+            sequenceName = "short_url_seq",
+            allocationSize = 1
+    )
     private Long id;
 
     @Column(name = "short_url", unique = true)

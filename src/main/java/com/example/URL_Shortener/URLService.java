@@ -7,11 +7,12 @@ import com.example.URL_Shortener.exception.URLNotFound;
 import com.example.URL_Shortener.Repository.IURLRepository;
 import com.example.URL_Shortener.dto.Request.ShortenURL;
 import com.example.URL_Shortener.model.Link;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Slf4j
-@org.springframework.stereotype.Service
+@Service
 @RequiredArgsConstructor
 public class URLService {
     private final IURLRepository urlRepository;
@@ -35,16 +36,13 @@ public class URLService {
         final Integer userId = dto.getUserId();
 
         Link link = Link.builder().longURL(longURL).localDateTime(LocalDateTime.now()).userId(userId).build();
-        link = urlRepository.saveAndFlush(link);
+        link = urlRepository.save(link);
 
         log.debug("Generated link but not shortURL yet");
         String shortUrl = base62(link.getId());
 
         log.debug("Generated link with shortURL={}, saving to db", shortUrl);
         link.setShortURL(shortUrl);
-
-        Link saved = urlRepository.save(link);
-        log.info("Successfully saved link with ID: {}", saved.getId());
 
         return shortUrl;
     }
